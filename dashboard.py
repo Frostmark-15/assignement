@@ -31,12 +31,7 @@ if "firebase_initialized" not in st.session_state:
 # ---------- FIREBASE SETUP ----------
 if not st.session_state.firebase_initialized:
     try:
-        # Load Firebase credentials from Streamlit Secrets
-        import json
-        cred_dict = dict(st.secrets["firebase"])
-        # Ensure private_key line breaks are preserved
-        cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
-        cred = credentials.Certificate(cred_dict)
+        cred = credentials.Certificate("firebase-adminsdk.json")
         firebase_admin.initialize_app(cred, {
             "databaseURL": "https://hydrotrack-iot-default-rtdb.asia-southeast1.firebasedatabase.app/"
         })
@@ -44,7 +39,6 @@ if not st.session_state.firebase_initialized:
         st.success("Firebase initialized ✅")
     except Exception as e:
         st.error(f"Firebase initialization failed: {e}")
-
 
 # ---------- HELPER FUNCTIONS ----------
 def get_rack_status(station_name):
